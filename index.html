@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DGguard — AI-Powered Business Systems</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#ffffff;color:#1c2530;line-height:1.6;}
+  a{text-decoration:none;color:inherit;}
+
+  .nav{position:sticky;top:0;z-index:100;background:#0b1f38;padding:20px 30px;display:flex;justify-content:space-between;align-items:center;}
+  .nav .brand-block{display:flex;flex-direction:column;}
+  .nav .brand{font-size:24px;font-weight:bold;color:#ffffff;letter-spacing:1px;line-height:1;}
+  .nav .brand span{color:#5fc4f5;}
+  .nav .tag{font-size:10px;color:#5fc4f5;letter-spacing:2px;margin-top:4px;font-weight:bold;}
+  .nav .cta{background:#2f9bdb;color:#fff;padding:10px 22px;border-radius:4px;font-size:14px;font-weight:bold;}
+
+  .hero{background:linear-gradient(135deg,#0b1f38 0%,#123a5c 55%,#16507e 100%);color:#fff;padding:90px 30px;text-align:center;}
+  .hero h1{font-size:42px;font-weight:bold;max-width:800px;margin:0 auto 20px;line-height:1.3;}
+  .hero p{font-size:19px;color:#cfe4f5;max-width:600px;margin:0 auto 34px;}
+  .hero .btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{background:#2f9bdb;color:#fff;padding:16px 34px;border-radius:4px;font-weight:bold;font-size:16px;}
+  .btn-outline{border:2px solid #5fc4f5;color:#5fc4f5;padding:14px 32px;border-radius:4px;font-weight:bold;font-size:16px;}
+
+  .section{padding:70px 30px;max-width:1000px;margin:0 auto;}
+  .section h2{font-size:32px;color:#0b1f38;margin-bottom:14px;text-align:center;}
+  .section .sub{text-align:center;color:#555;font-size:17px;max-width:600px;margin:0 auto 50px;}
+
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px;}
+  .card{background:#f7f9fb;border:1px solid #dde3e8;border-radius:8px;padding:34px 26px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+  .card:hover,.card:active{transform:translateY(-3px);box-shadow:0 8px 20px rgba(11,31,56,0.1);border-color:#2f9bdb;}
+  .card .more{color:#2f9bdb;font-size:13px;font-weight:bold;margin-top:12px;}
+  .card .icon{margin-bottom:16px;}
+  .card .icon svg{width:36px;height:36px;stroke:#2f9bdb;fill:none;stroke-width:1.8;}
+  .card h3{font-size:19px;color:#0b1f38;margin-bottom:10px;}
+  .card p{color:#4a5866;font-size:15px;}
+
+  .steps{counter-reset:step;}
+  .step{display:flex;gap:24px;margin-bottom:34px;align-items:flex-start;cursor:pointer;padding:16px;border-radius:8px;transition:background .15s;}
+  .step:hover,.step:active{background:#f7f9fb;}
+  .step .more{color:#2f9bdb;font-size:13px;font-weight:bold;margin-top:6px;}
+
+  .ind-chip{background:#123a5c;border:1px solid #2f9bdb;padding:12px 26px;border-radius:30px;font-size:15px;display:inline-block;transition:background .15s;}
+  .ind-chip:hover,.ind-chip:active{background:#2f9bdb;}
+
+  .detail-page{display:none;position:fixed;inset:0;background:#fff;z-index:300;overflow-y:auto;}
+  .detail-page.open{display:block;}
+  .detail-header{background:#0b1f38;padding:22px 30px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:5;}
+  .detail-header .back{background:none;border:1px solid #2f9bdb;color:#5fc4f5;padding:10px 20px;border-radius:4px;font-size:14px;font-weight:bold;cursor:pointer;}
+  .detail-header .brand-mini{color:#fff;font-weight:bold;font-size:18px;}
+  .detail-header .brand-mini span{color:#5fc4f5;}
+  .detail-hero{background:linear-gradient(135deg,#0b1f38 0%,#123a5c 55%,#16507e 100%);color:#fff;padding:70px 30px 60px;text-align:center;}
+  .detail-hero .tagline{color:#5fc4f5;letter-spacing:2px;font-size:13px;font-weight:bold;margin-bottom:16px;}
+  .detail-hero h1{font-size:38px;max-width:700px;margin:0 auto;}
+  .detail-body{max-width:720px;margin:0 auto;padding:60px 30px;}
+  .detail-body p{color:#33404d;font-size:18px;line-height:1.85;margin-bottom:26px;}
+  .detail-body .personalize{background:#eef7fd;border-left:4px solid #2f9bdb;padding:24px 28px;margin:36px 0;border-radius:0 6px 6px 0;}
+  .detail-body .personalize p{margin-bottom:0;font-style:italic;color:#0b1f38;}
+  .detail-cta{background:#eef7fd;text-align:center;padding:60px 30px;}
+  .detail-cta h2{color:#0b1f38;font-size:26px;margin-bottom:16px;}
+  .detail-cta p{color:#4a5866;margin-bottom:26px;}
+  .detail-cta .link-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
+  .copy-link{background:#fff;border:1px solid #cfd8e0;padding:12px 20px;border-radius:4px;font-size:14px;color:#0b1f38;cursor:pointer;font-weight:bold;}
+  .copy-link.copied{background:#2f9bdb;color:#fff;border-color:#2f9bdb;}
+  .step .num{counter-increment:step;background:#0b1f38;color:#fff;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;}
+  .step .num::before{content:counter(step);}
+  .step h3{font-size:18px;color:#0b1f38;margin-bottom:6px;}
+  .step p{color:#4a5866;font-size:15px;}
+
+  .industries{background:#0b1f38;color:#fff;}
+  .industries h2{color:#fff;}
+  .industries .sub{color:#cfe4f5;}
+  .ind-grid{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+
+  .lead-section{background:#f7f9fb;padding:70px 30px;}
+  .lead-box{max-width:560px;margin:0 auto;background:#fff;border:1px solid #dde3e8;border-radius:10px;padding:44px 36px;}
+  .lead-box h2{font-size:26px;color:#0b1f38;margin-bottom:10px;text-align:center;}
+  .lead-box .sub{color:#4a5866;font-size:15px;text-align:center;margin-bottom:30px;}
+  .lead-box label{display:block;font-size:13px;color:#0b1f38;font-weight:bold;margin-bottom:6px;margin-top:16px;}
+  .lead-box input,.lead-box select,.lead-box textarea{width:100%;padding:13px;border:1px solid #cfd8e0;border-radius:5px;font-size:15px;font-family:inherit;box-sizing:border-box;}
+  .lead-box textarea{resize:vertical;min-height:80px;}
+  .lead-box button{width:100%;background:#2f9bdb;color:#fff;border:none;padding:16px;border-radius:5px;font-weight:bold;font-size:16px;margin-top:24px;cursor:pointer;}
+  .lead-box button:disabled{opacity:0.6;}
+  .lead-msg{text-align:center;margin-top:16px;font-size:14px;font-weight:bold;}
+  .lead-msg.success{color:#1f8a4c;}
+  .lead-msg.error{color:#c0392b;}
+
+  .cta-section{background:#eef7fd;text-align:center;padding:80px 30px;}
+  .cta-section h2{font-size:30px;color:#0b1f38;margin-bottom:16px;}
+  .cta-section p{color:#4a5866;margin-bottom:30px;font-size:17px;}
+
+  footer{background:#0b1f38;color:#cfe4f5;text-align:center;padding:40px 30px;font-size:14px;}
+  footer .brand{color:#fff;font-weight:bold;font-size:18px;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand-block">
+    <div class="brand">DG<span>guard</span> Systems</div>
+    <div class="tag">AI-POWERED DATA SYSTEM</div>
+  </div>
+  <a class="cta" href="https://wa.me/237641560868" target="_blank">Book Free Consultation</a>
+</nav>
+
+<section class="hero">
+  <h1>Your Business, Organized. Built For You in 48 Hours.</h1>
+  <p>A custom online system for your orders, customers, and invoices — no more lost paper, no more confusion.</p>
+  <div class="btns">
+    <a class="btn-primary" href="https://wa.me/237641560868" target="_blank">Book Free Consultation</a>
+    <a class="btn-outline" href="#how-it-works">See How It Works</a>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What You Get</h2>
+  <p class="sub">Everything a small business needs to run smoothly, built around how you actually work.</p>
+  <div class="grid3">
+    <div class="card" onclick="openPage('dashboard')"><div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 15l3-4 3 3 4-6"/></svg></div><h3>Private Dashboard</h3><p>A private online dashboard for your business, accessible anywhere.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('orders')"><div class="icon"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div><h3>Order Tracking</h3><p>Track every order and customer from start to finish, nothing forgotten.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('invoices')"><div class="icon"><svg viewBox="0 0 24 24"><path d="M6 2h9l3 3v17H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg></div><h3>Instant Invoices</h3><p>Generate professional invoices in seconds, every time.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('mobile')"><div class="icon"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>Works On Your Phone</h3><p>No special equipment — runs on the phone you already have.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('training')"><div class="icon"><svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div><h3>Training Included</h3><p>A short training session so you're confident using it from day one.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('security')"><div class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div><h3>Real Security</h3><p>Proper login protection — your data stays private, not just password-guessed.</p><div class="more">Tap to learn more →</div></div>
+  </div>
+</section>
+
+<section class="section industries">
+  <h2>Built For Your Industry</h2>
+  <p class="sub">Same trusted DGguard system, tailored to how each business actually runs.</p>
+  <div class="ind-grid">
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20Salon%20or%20Spa." target="_blank">Salons & Spas</a>
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20Hotel%20or%20Guesthouse." target="_blank">Hotels & Guesthouses</a>
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20Restaurant." target="_blank">Restaurants</a>
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20Shop%20or%20Boutique." target="_blank">Shops & Boutiques</a>
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20Import%20or%20Procurement%20business." target="_blank">Import & Procurement</a>
+    <a class="ind-chip" href="https://wa.me/237641560868?text=Hi%2C%20I%27m%20interested%20in%20DGguard%20for%20my%20business." target="_blank">Any Local Business</a>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What Most Small Businesses Miss</h2>
+  <p class="sub">Not just orders and invoices — the parts of the business that quietly cost money because no one's watching them.</p>
+  <div class="grid3">
+    <div class="card" onclick="openPage('profit')"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div><h3>Real Profit Tracking</h3><p>Do you actually know your profit per sale, or just what came in?</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('followup')"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h3>Customer Follow-Up</h3><p>Are past customers coming back, or quietly going elsewhere?</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('stock')"><div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="1"/><path d="M8 7V4a4 4 0 018 0v3"/></svg></div><h3>Stock & Supply Alerts</h3><p>Do you find out you're out of stock only when a customer asks?</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('expenses')"><div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Where Expenses Go</h3><p>Sales get tracked. Small daily expenses quietly don't.</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('staff')"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></div><h3>Staff Accountability</h3><p>If two people handle orders, do you know who did what?</p><div class="more">Tap to learn more →</div></div>
+    <div class="card" onclick="openPage('reminders')"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Appointment No-Shows</h3><p>A missed appointment with no reminder is lost income, quietly.</p><div class="more">Tap to learn more →</div></div>
+  </div>
+</section>
+
+<section class="section" id="how-it-works">
+  <h2>How It Works</h2>
+  <p class="sub">From first conversation to a working system, in four simple steps.</p>
+  <div class="steps">
+    <div class="step" onclick="openPage('step1')"><div class="num"></div><div><h3>Free Consultation</h3><p>We talk about how your business currently runs, and what's frustrating about it.</p><div class="more">Tap to learn more →</div></div></div>
+    <div class="step" onclick="openPage('step2')"><div class="num"></div><div><h3>We Build Your System</h3><p>A custom system built specifically around what you told us.</p><div class="more">Tap to learn more →</div></div></div>
+    <div class="step" onclick="openPage('step3')"><div class="num"></div><div><h3>You Review & We Refine</h3><p>You test it, tell us what feels off, and we adjust it together.</p><div class="more">Tap to learn more →</div></div></div>
+    <div class="step" onclick="openPage('step4')"><div class="num"></div><div><h3>Live in 48 Hours</h3><p>Your system goes live, with a full walkthrough so you're confident using it.</p><div class="more">Tap to learn more →</div></div></div>
+  </div>
+</section>
+
+<section class="lead-section">
+  <div class="lead-box">
+    <h2>Tell Us About Your Business</h2>
+    <p class="sub">Fill this in and we'll reach out — even if you don't message us on WhatsApp right away.</p>
+    <form id="lead-form">
+      <label>Your Name</label>
+      <input type="text" id="lead-name" required>
+      <label>Business Type</label>
+      <select id="lead-business">
+        <option>Salon or Spa</option>
+        <option>Hotel or Guesthouse</option>
+        <option>Restaurant</option>
+        <option>Shop or Boutique</option>
+        <option>Import or Procurement</option>
+        <option>Other</option>
+      </select>
+      <label>WhatsApp Number</label>
+      <input type="tel" id="lead-phone" required placeholder="e.g. 237641560868">
+      <label>What's frustrating about how you currently run things?</label>
+      <textarea id="lead-message" placeholder="Optional, but helps us prepare"></textarea>
+      <button type="submit" id="lead-submit">Send My Details</button>
+      <div class="lead-msg" id="lead-msg"></div>
+    </form>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Ready to stop losing money to disorganization?</h2>
+  <p>Book a free consultation — no pressure, no obligation, just a real conversation about your business.</p>
+  <a class="btn-primary" href="https://wa.me/237641560868" target="_blank">Book Your Free Consultation</a>
+</section>
+
+<footer>
+  <div class="brand">DGguard Systems</div>
+  <div>AI-Powered Data System &nbsp;·&nbsp; Business Systems, Built Right</div>
+  <div style="margin-top:16px;">WhatsApp: +237 641 560 868 &nbsp;|&nbsp; Call: +237 676 347 228 &nbsp;|&nbsp; kmdscameroon@gmail.com</div>
+</footer>
+
+<div class="detail-page" id="detail-page">
+  <div class="detail-header">
+    <button class="back" onclick="closePage()">← Back</button>
+    <div class="brand-mini">DG<span>guard</span></div>
+  </div>
+  <div class="detail-hero">
+    <div class="tagline" id="detail-tagline"></div>
+    <h1 id="detail-title"></h1>
+  </div>
+  <div class="detail-body" id="detail-body"></div>
+  <div class="detail-cta">
+    <h2>Want this built around your own business?</h2>
+    <p>Every DGguard system is shaped around how you already think and work — not a fixed template you have to adjust yourself to.</p>
+    <a class="btn-primary" href="https://wa.me/237641560868" target="_blank">Book Your Free Consultation</a>
+    <div class="link-row">
+      <button class="copy-link" id="copy-link-btn" onclick="copyPageLink()">Copy Link To This Page</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL = "https://qfocanqogkugdyzatjty.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmb2NhbnFvZ2t1Z2R5emF0anR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNTA5NDQsImV4cCI6MjA5ODgyNjk0NH0.HqcGfD7x8oeBeoJuMgZasWGsEKHEbm9s-4V2v9bSfVU";
+var sb = null;
+try{ if(window.supabase){ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } }catch(e){ sb=null; }
+
+document.getElementById('lead-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var btn = document.getElementById('lead-submit');
+  var msg = document.getElementById('lead-msg');
+  msg.textContent=''; msg.className='lead-msg';
+
+  var lead = {
+    name: document.getElementById('lead-name').value.trim(),
+    business_type: document.getElementById('lead-business').value,
+    phone: document.getElementById('lead-phone').value.trim(),
+    message: document.getElementById('lead-message').value.trim(),
+    created_at: new Date().toISOString()
+  };
+
+  if(!sb){
+    msg.textContent = "Couldn't connect right now — please message us directly on WhatsApp instead.";
+    msg.classList.add('error');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = "Sending…";
+  var res = await sb.from('dgguard_leads').insert([lead]);
+  btn.disabled = false; btn.textContent = "Send My Details";
+
+  if(res.error){
+    msg.textContent = "Something went wrong — please message us on WhatsApp instead.";
+    msg.classList.add('error');
+  } else {
+    msg.textContent = "Thank you — we'll be in touch on WhatsApp soon.";
+    msg.classList.add('success');
+    document.getElementById('lead-form').reset();
+  }
+});
+</script>
+
+<script>
+var pageData = {
+  dashboard: {
+    tag:"WHAT YOU GET", title:"Private Dashboard",
+    paras:[
+      "Your dashboard is the first thing you see when you open your system — a single screen showing what's actually happening in your business right now: today's orders, what's pending, what's been completed.",
+      "Most business owners currently carry this picture in their head, or spread across a notebook and old WhatsApp messages. A dashboard means you don't have to reconstruct it every morning — it's just there, already organized."
+    ],
+    personalize:"During your free consultation, we ask what you actually check first each day — orders, payments, appointments — and build the dashboard to lead with that, not a generic layout."
+  },
+  orders: {
+    tag:"WHAT YOU GET", title:"Order Tracking",
+    paras:[
+      "Every order is logged the moment it comes in and moves through clear stages — new, in progress, completed — so you always know exactly where things stand without asking yourself, or your staff, to remember.",
+      "This matters most on busy days, when three or four things are happening at once and it's easy for one order to slip through unnoticed."
+    ],
+    personalize:"The stages themselves are built around how your specific business actually moves an order forward — not a fixed checklist that doesn't match how you work."
+  },
+  invoices: {
+    tag:"WHAT YOU GET", title:"Instant Invoices",
+    paras:[
+      "A clean, professional invoice generated in seconds, ready to send straight to your customer on WhatsApp or print for them directly — no more handwriting totals or recalculating by hand under pressure.",
+      "It also means every invoice looks consistent and trustworthy, which matters more than most business owners realize when a customer is deciding whether to pay promptly."
+    ],
+    personalize:"Your invoice carries your business name, your numbers, and the specific details your customers expect to see — built to match how you already present yourself."
+  },
+  mobile: {
+    tag:"WHAT YOU GET", title:"Works On Your Phone",
+    paras:[
+      "No special hardware, no separate till system, no tablet you have to buy. If you already carry a smartphone, you already have everything required to run your entire system, day to day.",
+      "This is deliberate — most small business owners in Cameroon run their business from their phone already. DGguard is built to fit that reality, not to force new habits or new equipment."
+    ],
+    personalize:"We test your system directly on your own phone during setup, not just a demo device — so you know exactly how it feels in your hands before it's finished."
+  },
+  training: {
+    tag:"WHAT YOU GET", title:"Training Included",
+    paras:[
+      "Once your system is live, you get a real walkthrough — a call where we show you exactly how to use it for your specific business, not a generic manual you have to interpret yourself.",
+      "The goal is that you're confident using it from day one, not left figuring it out alone after we've delivered it."
+    ],
+    personalize:"This walkthrough is built around the exact way you'll actually use the system day to day, based on everything discussed in your free consultation."
+  },
+  security: {
+    tag:"WHAT YOU GET", title:"Real Security",
+    paras:[
+      "Your login is protected with real authentication — the same kind of protection behind services like Gmail — not just a password typed into the page that anyone technical could bypass.",
+      "Your business data stays private, even if someone else knows your website's link. This matters more once real client or financial information is involved."
+    ],
+    personalize:"Each business gets its own separate, private account — your data is never mixed with, or visible to, any other business using DGguard."
+  },
+  profit: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Real Profit Tracking",
+    paras:[
+      "Knowing how much money came in isn't the same as knowing what you actually kept after costs. Many small businesses track sales closely but have only a rough sense of real profit.",
+      "DGguard tracks real profit per sale, not just totals — so you know which parts of your business are actually working, not just which parts are busy."
+    ],
+    personalize:"We build the profit calculation around your actual cost structure — your markup, your fees, your specific expenses — not a generic formula."
+  },
+  followup: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Customer Follow-Up",
+    paras:[
+      "Most businesses have no easy record of who bought from them last month, or six months ago. Without that, there's no way to bring a past customer back — they simply drift away, quietly.",
+      "A simple customer history means you can see who your regulars are, and who hasn't come back in a while, worth a message."
+    ],
+    personalize:"How you follow up — a WhatsApp message, a call, a reminder — is up to you. DGguard just makes sure you have the information to act on, when you're ready to."
+  },
+  stock: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Stock & Supply Alerts",
+    paras:[
+      "Finding out you're out of stock only when a customer asks is a lost sale every time — and it happens more often than most business owners realize, especially during busy weeks.",
+      "A simple low-stock flag means you restock before it becomes a problem, not after you've already turned someone away."
+    ],
+    personalize:"We set the alert thresholds based on how fast your specific products actually move, not a fixed number that doesn't fit your business."
+  },
+  expenses: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Where Expenses Go",
+    paras:[
+      "Sales get written down carefully. Small daily costs — transport, packaging, a small repair — usually don't, and they quietly eat into profit without ever being added up.",
+      "Tracking both sides, not just income, gives you the real picture of what your business is actually earning."
+    ],
+    personalize:"During setup, we talk through your actual recurring costs so the system reflects real expenses you deal with, not a generic category list."
+  },
+  staff: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Staff Accountability",
+    paras:[
+      "If more than one person handles orders, payments, or stock, it's easy for confusion to creep in about who did what, and when — especially when something goes wrong.",
+      "A shared system ties every action to the person who did it, reducing disputes and making it easier to see where things actually stand."
+    ],
+    personalize:"Staff access and permissions are set up based on how your team actually operates — who needs to see what, and who doesn't."
+  },
+  reminders: {
+    tag:"WHAT MOST BUSINESSES MISS", title:"Appointment No-Shows",
+    paras:[
+      "A missed appointment with no reminder sent beforehand is income that quietly disappeared — and it happens more than most appointment-based businesses like to admit.",
+      "A simple reminder system cuts down on no-shows without requiring you to personally message every client yourself."
+    ],
+    personalize:"We build the reminder timing and message around what actually works for your specific clients, based on what you tell us about them."
+  },
+  step1: {
+    tag:"HOW IT WORKS — STEP 1", title:"Free Consultation",
+    paras:[
+      "A short, no-pressure conversation — by call or WhatsApp — about how your business runs today, what's frustrating, and what you wish was easier.",
+      "This is the most important step, and it's entirely about listening. We're not pitching a fixed product; we're learning your business well enough to build the right one."
+    ],
+    personalize:"Nothing about your system gets decided before this conversation happens. It's the foundation everything else is built on."
+  },
+  step2: {
+    tag:"HOW IT WORKS — STEP 2", title:"We Build Your System",
+    paras:[
+      "Using everything from your consultation, your system gets built specifically around your business — not a generic template with your name added to it.",
+      "This usually takes a few hours of focused, deliberate work, not days of back and forth."
+    ],
+    personalize:"Every field, every stage, every label reflects language and steps you actually recognize from your own business."
+  },
+  step3: {
+    tag:"HOW IT WORKS — STEP 3", title:"You Review & We Refine",
+    paras:[
+      "Before anything is final, you click through it yourself and tell us what feels off, missing, or confusing.",
+      "We adjust it together until it genuinely fits how you work — this step exists specifically so you're never stuck with something that doesn't match your business."
+    ],
+    personalize:"This is your system, built around your judgment of what works — not ours."
+  },
+  step4: {
+    tag:"HOW IT WORKS — STEP 4", title:"Live in 48 Hours",
+    paras:[
+      "Your system goes live, connected and ready to use, with a full walkthrough so you're confident from day one — not left to figure it out on your own.",
+      "From your very first conversation with us to a working system in your hands, in two days."
+    ],
+    personalize:"48 hours is the target because your time matters — every day spent disorganized is a day of quiet cost to your business."
+  }
+};
+
+function openPage(key){
+  var d = pageData[key];
+  if(!d) return;
+  document.getElementById('detail-tagline').textContent = d.tag;
+  document.getElementById('detail-title').textContent = d.title;
+  var body = document.getElementById('detail-body');
+  body.innerHTML = '';
+  d.paras.forEach(function(p){
+    var el = document.createElement('p');
+    el.textContent = p;
+    body.appendChild(el);
+  });
+  var pz = document.createElement('div');
+  pz.className = 'personalize';
+  var pzp = document.createElement('p');
+  pzp.textContent = d.personalize;
+  pz.appendChild(pzp);
+  body.appendChild(pz);
+  document.getElementById('detail-page').classList.add('open');
+  document.getElementById('copy-link-btn').textContent = 'Copy Link To This Page';
+  document.getElementById('copy-link-btn').classList.remove('copied');
+  window.location.hash = key;
+  window.scrollTo(0,0);
+}
+function closePage(){
+  document.getElementById('detail-page').classList.remove('open');
+  history.replaceState(null, '', window.location.pathname);
+}
+function copyPageLink(){
+  var url = window.location.href;
+  navigator.clipboard.writeText(url).then(function(){
+    var btn = document.getElementById('copy-link-btn');
+    btn.textContent = 'Link Copied ✓';
+    btn.classList.add('copied');
+  }).catch(function(){});
+}
+window.addEventListener('load', function(){
+  var key = window.location.hash.replace('#','');
+  if(key && pageData[key]) openPage(key);
+});
+</script>
+
+</body>
+</html>
