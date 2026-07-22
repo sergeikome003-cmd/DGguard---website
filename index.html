@@ -90,6 +90,8 @@
   .lead-msg.success{color:#1f8a4c;}
   .lead-msg.error{color:#c0392b;}
 
+  #dash-carousel::-webkit-scrollbar{display:none;}
+
   .cta-section{background:#eef7fd;text-align:center;padding:80px 30px;}
   .cta-section h2{font-size:30px;color:#0b1f38;margin-bottom:16px;}
   .cta-section p{color:#4a5866;margin-bottom:30px;font-size:17px;}
@@ -129,17 +131,100 @@
 <section class="section" style="background:#0b1f38;">
   <h2 style="color:#fff;">A Mirror of How You Already Think</h2>
   <p class="sub" style="color:#cfe4f5;">We don't teach you a new way of working. The system mirrors your own Buy → Sell → Profit or Loss thinking, and grows with you as your business scales.</p>
-  <div style="max-width:640px;margin:0 auto;background:#123a5c;border:1px solid #2f9bdb;border-radius:10px;padding:30px;">
-    <div style="display:flex;justify-content:space-between;color:#5fc4f5;font-size:12px;letter-spacing:1px;font-weight:bold;margin-bottom:16px;"><span>DASHBOARD PREVIEW</span><span>TODAY</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-      <div style="background:#0b1f38;border-radius:6px;padding:16px;"><div style="color:#8fb8d8;font-size:12px;">BOUGHT TODAY</div><div style="color:#fff;font-size:22px;font-weight:bold;">42 units</div></div>
-      <div style="background:#0b1f38;border-radius:6px;padding:16px;"><div style="color:#8fb8d8;font-size:12px;">SOLD TODAY</div><div style="color:#fff;font-size:22px;font-weight:bold;">31 units</div></div>
-      <div style="background:#0b1f38;border-radius:6px;padding:16px;"><div style="color:#8fb8d8;font-size:12px;">PROFIT</div><div style="color:#4ade80;font-size:22px;font-weight:bold;">+58,000 XAF</div></div>
-      <div style="background:#0b1f38;border-radius:6px;padding:16px;"><div style="color:#8fb8d8;font-size:12px;">LOW STOCK</div><div style="color:#f0a84e;font-size:22px;font-weight:bold;">3 items</div></div>
+
+  <div id="dash-carousel" style="display:flex;overflow-x:auto;gap:24px;max-width:900px;margin:0 auto;padding:6px 20px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+    <div class="dash-slide" style="scroll-snap-align:center;flex:0 0 320px;background:#123a5c;border:1px solid #2f9bdb;border-radius:10px;padding:26px;">
+      <div style="display:flex;justify-content:space-between;color:#5fc4f5;font-size:11px;letter-spacing:1px;font-weight:bold;margin-bottom:14px;"><span>RETAIL &amp; TRADE</span><span>TODAY</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">BOUGHT TODAY</div><div style="color:#fff;font-size:19px;font-weight:bold;">42 units</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">SOLD TODAY</div><div style="color:#fff;font-size:19px;font-weight:bold;">31 units</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">PROFIT</div><div style="color:#4ade80;font-size:19px;font-weight:bold;">+58,000 XAF</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">LOW STOCK</div><div style="color:#f0a84e;font-size:19px;font-weight:bold;">3 items</div></div>
+      </div>
     </div>
-    <p style="color:#8fb8d8;font-size:12px;text-align:center;margin-top:6px;">Illustrative preview — your real dashboard is built around your exact numbers and workflow.</p>
+
+    <div class="dash-slide" style="scroll-snap-align:center;flex:0 0 320px;background:#123a5c;border:1px solid #2f9bdb;border-radius:10px;padding:26px;">
+      <div style="display:flex;justify-content:space-between;color:#5fc4f5;font-size:11px;letter-spacing:1px;font-weight:bold;margin-bottom:14px;"><span>SALON &amp; SPA</span><span>TODAY</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">APPOINTMENTS</div><div style="color:#fff;font-size:19px;font-weight:bold;">9 booked</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">COMPLETED</div><div style="color:#fff;font-size:19px;font-weight:bold;">6 done</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">REVENUE</div><div style="color:#4ade80;font-size:19px;font-weight:bold;">+34,500 XAF</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">STAFF ON DUTY</div><div style="color:#fff;font-size:19px;font-weight:bold;">3 staff</div></div>
+      </div>
+    </div>
+
+    <div class="dash-slide" style="scroll-snap-align:center;flex:0 0 320px;background:#123a5c;border:1px solid #2f9bdb;border-radius:10px;padding:26px;">
+      <div style="display:flex;justify-content:space-between;color:#5fc4f5;font-size:11px;letter-spacing:1px;font-weight:bold;margin-bottom:14px;"><span>HOTEL &amp; GUESTHOUSE</span><span>TODAY</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">ROOMS OCCUPIED</div><div style="color:#fff;font-size:19px;font-weight:bold;">14 / 20</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">CHECK-INS</div><div style="color:#fff;font-size:19px;font-weight:bold;">5 today</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">REVENUE</div><div style="color:#4ade80;font-size:19px;font-weight:bold;">+210,000 XAF</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">CHECK-OUTS</div><div style="color:#fff;font-size:19px;font-weight:bold;">3 today</div></div>
+      </div>
+    </div>
+
+    <div class="dash-slide" style="scroll-snap-align:center;flex:0 0 320px;background:#123a5c;border:1px solid #2f9bdb;border-radius:10px;padding:26px;">
+      <div style="display:flex;justify-content:space-between;color:#5fc4f5;font-size:11px;letter-spacing:1px;font-weight:bold;margin-bottom:14px;"><span>RESTAURANT</span><span>TODAY</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">ORDERS TODAY</div><div style="color:#fff;font-size:19px;font-weight:bold;">57 orders</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">TABLES ACTIVE</div><div style="color:#fff;font-size:19px;font-weight:bold;">8 tables</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">REVENUE</div><div style="color:#4ade80;font-size:19px;font-weight:bold;">+96,200 XAF</div></div>
+        <div style="background:#0b1f38;border-radius:6px;padding:14px;"><div style="color:#8fb8d8;font-size:11px;">LOW STOCK</div><div style="color:#f0a84e;font-size:19px;font-weight:bold;">2 items</div></div>
+      </div>
+    </div>
   </div>
+
+  <div id="dash-dots" style="display:flex;justify-content:center;gap:8px;margin-top:6px;"></div>
+  <p style="color:#8fb8d8;font-size:12px;text-align:center;margin-top:14px;">Illustrative previews — swipe anytime, or let it move on its own. Your real dashboard is built around your exact numbers and workflow.</p>
 </section>
+
+<script>
+(function(){
+  var carousel = document.getElementById('dash-carousel');
+  var slides = carousel.querySelectorAll('.dash-slide');
+  var dotsWrap = document.getElementById('dash-dots');
+  var dots = [];
+  slides.forEach(function(_, i){
+    var d = document.createElement('div');
+    d.style.cssText = 'width:8px;height:8px;border-radius:50%;background:'+(i===0?'#5fc4f5':'#2f5578')+';transition:background .2s;';
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  });
+
+  var index = 0;
+  var userInteracting = false;
+  var resumeTimeout;
+
+  function goTo(i){
+    index = (i + slides.length) % slides.length;
+    var slide = slides[index];
+    carousel.scrollTo({left: slide.offsetLeft - (carousel.clientWidth - slide.clientWidth)/2, behavior:'smooth'});
+    dots.forEach(function(d,j){ d.style.background = j===index ? '#5fc4f5' : '#2f5578'; });
+  }
+
+  var autoTimer = setInterval(function(){
+    if(!userInteracting) goTo(index+1);
+  }, 3200);
+
+  function pauseThenResume(){
+    userInteracting = true;
+    clearTimeout(resumeTimeout);
+    resumeTimeout = setTimeout(function(){ userInteracting = false; }, 4000);
+  }
+  carousel.addEventListener('touchstart', pauseThenResume, {passive:true});
+  carousel.addEventListener('pointerdown', pauseThenResume);
+  carousel.addEventListener('scroll', function(){
+    var scrollCenter = carousel.scrollLeft + carousel.clientWidth/2;
+    var closest = 0, closestDist = Infinity;
+    slides.forEach(function(s,i){
+      var dist = Math.abs((s.offsetLeft + s.clientWidth/2) - scrollCenter);
+      if(dist < closestDist){ closestDist = dist; closest = i; }
+    });
+    index = closest;
+    dots.forEach(function(d,j){ d.style.background = j===index ? '#5fc4f5' : '#2f5578'; });
+  }, {passive:true});
+})();
+</script>
 
 <section class="section">
   <h2>We Already Understand Your Business</h2>
